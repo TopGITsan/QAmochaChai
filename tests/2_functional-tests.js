@@ -116,17 +116,20 @@ suite('Functional Tests', function() {
       // we rely on it in our tests.
       
       test('send {surname: "Colombo"}',  function(done){
-       
+      
        // we setup the request for you...
-       chai.request(server)
+      chai.request(server)
         .put('/travellers')
         /** send {surname: 'Colombo'} here **/
-        // .send({...})
+        .send({surname: "Colombo"})
         .end(function(err, res){
           
           /** your tests here **/
-          assert.fail(); // remove this after adding tests
-          
+          assert.equal(res.status, 200, 'response status should be 200');
+          assert.equal(res.type, 'application/json', 'response should be json');
+
+          assert.equal(res.body.name, 'Cristoforo','res.body.name should be "Cristoforo"');
+          assert.equal(res.body.surname,'Colombo','res.body.surname should be ');
           done(); // Never forget the 'done()' callback...
         });
       });
@@ -135,12 +138,20 @@ suite('Functional Tests', function() {
       // Try it again. This time without help !!
       test('send {surname: "da Verrazzano"}', function(done) {
         /** place the chai-http request code here... **/
-        
+        chai.request(server)
         /** place your tests inside the callback **/
-        
-        assert.fail(); // remove this after adding tests
-        done();
+          .put('/travelers')
+          .send({surname:'Colombo'})
+          .end(function(req,res){
+            assert.equal(req.status,200,'response status should be 200');
+            assert.equal(res.type,'application/json','response type should be json');
+
+            assert.equal(req.body.name,'Giovanni','req.body.name should be "Giovanni"');
+            assert.equal(req.body.surname,'da Verrazzano','req.body.surname should be "da Verrazzano"');
+            done();
+          })  
       });
+
     });
 
   });
